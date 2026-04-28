@@ -20,17 +20,24 @@ import java.util.Map;
 public class DiscoveryResource {
      @GET
     public Response discover() {
-        Map<String, Object> meta = new HashMap<>();
-        meta.put("name", "Smart Campus API");
-        meta.put("version", "1.0");
-        meta.put("description", "Sensor & Room Management API for the University Smart Campus");
-        meta.put("contact", "admin@smartcampus.ac.uk");
-
-        Map<String, String> links = new HashMap<>();
-        links.put("rooms",   "/api/v1/rooms");
-        links.put("sensors", "/api/v1/sensors");
-        meta.put("resources", links);
-
-        return Response.ok(meta).build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("api", "Smart Campus Sensor and Room Management API");
+        response.put("version", "1.0.0");
+        response.put("status", "operational");
+        response.put("contact", Map.of(
+            "administrator", "Campus IT Infrastructure",
+            "email", "smartcampus@university.ac.uk",
+            "module", "5COSC022W Client-Server Architectures"
+        ));
+        response.put("resources", Map.of(
+            "rooms",   "/api/v1/rooms",
+            "sensors", "/api/v1/sensors"
+        ));
+        response.put("_links", Map.of(
+            "self",    "/api/v1",
+            "rooms",   "/api/v1/rooms",
+            "sensors", "/api/v1/sensors"
+        ));
+        return Response.ok(response).build();
     }
 }
