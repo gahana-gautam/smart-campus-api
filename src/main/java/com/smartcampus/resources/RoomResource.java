@@ -3,9 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.smartcampus.resources;
-import com.smartcampus.exception.RoomNotEmptyException;
-import com.smartcampus.model.Room;
-import com.smartcampus.store.DataStore;
+import com.smartcampus.exceptions.RoomNotEmptyException;
+import com.smartcampus.models.Room;
+import com.smartcampus.DataStore;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 @Provider
 public class LoginFilter {
-    private static final Logger LOGGER = Logger.getLogger(ApiLoggingFilter.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LoginFilter.class.getName());
 
     @Override
     public void filter(ContainerRequestContext req) throws IOException {
