@@ -55,11 +55,7 @@ public class RoomResource {
     }
        /**
      * Part 2.2 - Delete a room.
-     * Business rule: blocked if sensors are still assigned → throws RoomNotEmptyException → 409.
-     *
-     * Idempotency: First call returns 204 (deleted). Subsequent identical calls return 404
-     * (already gone). Server state is identical after the first call — room is absent.
-     * HTTP defines idempotency by server-side effect, not response code, so this is correct.
+    
      */
     @DELETE
     @Path("/{roomId}")

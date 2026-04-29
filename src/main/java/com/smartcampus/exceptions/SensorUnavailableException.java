@@ -8,6 +8,6 @@ package com.smartcampus.exceptions;
  *
  * @author Asus
  */
-public class SensorUnavailableException {
-    
+public class SensorUnavailableException extends RuntimeException {
+    public SensorUnavailableException(String message) { super(message); }
 }
