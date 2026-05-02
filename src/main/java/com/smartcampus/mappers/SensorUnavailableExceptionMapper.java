@@ -15,6 +15,16 @@ import java.util.Map;
  *
  * @author Asus
  */
+
+/**
+ * Maps SensorUnavailableException to HTTP 403 Forbidden.
+ *
+ * The sensor exists and was found (ruling out 404), but the server refuses
+ * the reading submission based on the sensor's current state. RFC 9110 permits
+ * 403 when the server declines to fulfill a request based on server-side policy,
+ * which accurately describes this state-machine constraint.
+ */
+
 @Provider
 public class SensorUnavailableExceptionMapper
         implements ExceptionMapper<SensorUnavailableException> {

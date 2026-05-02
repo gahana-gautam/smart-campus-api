@@ -8,9 +8,23 @@ package com.smartcampus.models;
  *
  * @author Asus
  */
+
+/**
+ * Domain model representing a single timestamped measurement captured by a sensor.
+ *
+ * SensorReading objects form the immutable historical log for each sensor.
+ * Once appended, readings are never modified — this append-only semantic mirrors
+ * real-world telemetry systems where data integrity requires a complete,
+ * unaltered record of past measurements.
+ *
+ * If the client omits id or timestamp, SensorReadingResource auto-generates them
+ * server-side. UUID is used for id to guarantee global uniqueness without a
+ * central sequence generator.
+ */
+
 public class SensorReading {
     private String id;
-    private long timestamp;
+    private long timestamp; // when the reading was taken (epoch ms)
     private double value;
 
     public SensorReading() {}

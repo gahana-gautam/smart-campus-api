@@ -15,9 +15,24 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Asus
  */
+/**
+ * Centralized in-memory data store for the Smart Campus API.
+ *
+ * Implements the Singleton design pattern to guarantee a single shared
+ * state across the entire application lifetime. Because JAX-RS resource classes
+ * are instantiated per-request by default, a singleton store is the correct
+ * architectural choice for maintaining consistent in-memory collections without
+ * a backing database.
+ *
+ * Thread Safety: All collections are backed by ConcurrentHashMap,
+ * which provides thread-safe read and write operations without requiring explicit
+ * synchronization. This prevents race conditions when concurrent HTTP requests
+ * attempt to modify shared state simultaneously.
+ */
 public class DataStore {
     private static final DataStore INSTANCE = new DataStore();
-
+    
+   
     private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Sensor> sensors = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, List<SensorReading>> sensorReadings = new ConcurrentHashMap<>();
@@ -25,21 +40,25 @@ public class DataStore {
     private DataStore() {
         seedData();
     }
-
+    
+    
     public static DataStore getInstance() {
         return INSTANCE;
     }
-
+    
+    
     public ConcurrentHashMap<String, Room> getRooms() { return rooms; }
     public Room getRoom(String id) { return rooms.get(id); }
     public void saveRoom(Room room) { rooms.put(room.getId(), room); }
     public boolean deleteRoom(String id) { return rooms.remove(id) != null; }
-
+    
+   
     public ConcurrentHashMap<String, Sensor> getSensors() { return sensors; }
     public Sensor getSensor(String id) { return sensors.get(id); }
     public void saveSensor(Sensor sensor) { sensors.put(sensor.getId(), sensor); }
     public boolean deleteSensor(String id) { return sensors.remove(id) != null; }
 
+    
     public List<SensorReading> getReadings(String sensorId) {
         return sensorReadings.computeIfAbsent(sensorId, k -> new ArrayList<>());
     }
@@ -48,6 +67,12 @@ public class DataStore {
         sensorReadings.computeIfAbsent(sensorId, k -> new ArrayList<>()).add(reading);
     }
 
+   /**
+     * Seeds the store with representative demo data at startup so that all API
+     * endpoints can be exercised immediately without prior POST requests.
+     * The seed set includes sensors in multiple states (ACTIVE, MAINTENANCE)
+     * to enable immediate testing of business-rule enforcement.
+     */
     private void seedData() {
         Room r1 = new Room("LIB-301", "Library Quiet Study", 50);
         Room r2 = new Room("LAB-101", "Computer Science Lab", 30);
@@ -61,6 +86,7 @@ public class DataStore {
         saveSensor(s2);
         saveSensor(s3);
 
+        
         r1.getSensorIds().add("TEMP-001");
         r1.getSensorIds().add("OCC-001");
         r2.getSensorIds().add("CO2-001");

@@ -9,11 +9,23 @@ import java.util.List;
  *
  * @author Asus
  */
+/**
+ * Domain model representing a physical room on the Smart Campus.
+ *
+ * A Room is the top-level aggregate in the resource hierarchy.
+ * Sensors are always owned by exactly one room, forming a one-to-many
+ * relationship reflected both in this class (via sensorIds) and in the
+ * nested URI structure /rooms/{roomId}.
+ *
+ * The sensorIds list acts as a lightweight foreign-key index allowing the API
+ * to quickly determine whether a room is occupied without scanning the entire
+ * sensor collection critical for the deletion safety check in RoomResource.
+ */
 public class Room {
     private String id;
     private String name;
     private int capacity;
-    private List<String> sensorIds = new ArrayList<>();
+    private List<String> sensorIds = new ArrayList<>(); 
 
     public Room() {}
 

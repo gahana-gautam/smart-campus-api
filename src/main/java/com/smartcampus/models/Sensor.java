@@ -8,12 +8,27 @@ package com.smartcampus.models;
  *
  * @author Asus
  */
+
+/**
+ * Domain model representing a physical sensor deployed within a campus room.
+ *
+ * A Sensor belongs to exactly one Room (via roomId) and accumulates a historical
+ * log of SensorReading objects over time. The current measurement is cached in
+ * currentValue and updated on every successful reading submission, providing
+ * O(1) access to the latest value without scanning the reading history.
+ *
+ * Status lifecycle:
+ *   ACTIVE      - operational; readings can be submitted.
+ *   MAINTENANCE - temporarily offline for servicing; readings blocked (HTTP 403).
+ *   OFFLINE     - permanently disconnected; readings blocked (HTTP 403).
+ */
 public class Sensor {
     private String id;
     private String type;
-    private String status;
+    private String status; 
     private double currentValue;
-    private String roomId;
+    private String roomId; 
+
 
     public Sensor() {}
 

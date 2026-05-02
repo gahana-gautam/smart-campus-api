@@ -16,7 +16,23 @@ import java.util.logging.Logger;
  * @author Asus
  */
 
-//  Part 5.4 - Global Safety Net: catches ALL Throwable instances.
+/**
+ * Global catch-all exception mapper ensuring no raw stack trace is ever
+ * returned to an API consumer.
+ *
+ * Implements ExceptionMapper<Throwable> to intercept any exception not handled
+ * by a more specific mapper. The run time selects the mapper whose generic type
+ * most closely matches the thrown exception, so Throwable is only reached as a
+ * true safety net.
+ *
+ * Security rationale: stack traces expose class names, library versions, file
+ * paths and line numbers all useful to an attacker profiling the system.
+ * Full details are logged server-side only; a generic opaque message is returned
+ * to the client.
+ *
+ * WebApplicationException instances pass through unchanged because they already
+ * carry the correct HTTP status and were thrown intentionally by resource code.
+ */
 
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
@@ -25,13 +41,14 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable exception) {
-        // Preserve intended status codes for WebApplicationExceptions
+         // let these through with their own status code
         if (exception instanceof WebApplicationException wae)
             return wae.getResponse();
 
-        // Log full trace server-side, never send it to the client
+        // log full details server side only
         LOGGER.log(Level.SEVERE, "Unhandled error: " + exception.getMessage(), exception);
-
+        
+        // return a safe generic message to the client
         return Response.status(500)
                 .type(MediaType.APPLICATION_JSON)
                 .entity(Map.of(

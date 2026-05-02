@@ -11,13 +11,29 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/")
-@Produces(MediaType.APPLICATION_JSON)
 /**
  *
  * @author Asus
  */
+
+/**
+ * JAX-RS resource implementing the API discovery endpoint at GET /api/v1/
+ *
+ * Serves as the HATEOAS entry point for the Smart Campus API.
+ * HATEOAS (Hypermedia as the Engine of Application State) is the highest
+ * maturity level of RESTful design (Richardson Maturity Model Level 3).
+ *
+ * By embedding navigable links in the response, the API becomes self-describing:
+ * a client needs only know the root URI and can discover all available resources
+ * dynamically without relying on out-of-band documentation. If a path changes,
+ * the link updates automatically clients that navigate via links rather than
+ * hard coded URIs are unaffected.
+ */
+
+@Path("/")
+@Produces(MediaType.APPLICATION_JSON)
 public class DiscoveryResource {
+   
      @GET
     public Response discover() {
         Map<String, Object> response = new HashMap<>();
